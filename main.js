@@ -1,6 +1,6 @@
 import { initializeApp } from "firebase/app";
 import { getDatabase, ref, child, get, set } from "firebase/database";
-import icon from "./src/assets/timer.png";
+import icon from "./public/timer.png";
 
 console.log(icon);
 
