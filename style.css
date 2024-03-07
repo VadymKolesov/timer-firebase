@@ -130,13 +130,12 @@ button {
 }
 
 .timer-wrap {
-  width: 100%;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
   gap: 30px;
-  padding: 60px 0;
+  padding: 60px 30px;
   border-radius: 25px;
   background-color: var(--white);
   box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
