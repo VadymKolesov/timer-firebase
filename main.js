@@ -1,8 +1,5 @@
 import { initializeApp } from "firebase/app";
 import { getDatabase, ref, child, get, set } from "firebase/database";
-import icon from "./public/timer.png";
-
-console.log(icon);
 
 const refs = {
   timerClock: document.querySelector(".timer-clock"),
