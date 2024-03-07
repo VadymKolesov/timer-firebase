@@ -25,8 +25,22 @@
         <div class="timer-wrap">
           <h1 class="timer-clock">00:00,000</h1>
           <div class="timer-buttons">
-            <button type="button" class="start-btn active-btn">Start</button>
-            <button type="button" class="stop-btn inactive-btn">Stop</button>
+            <button
+              type="button"
+              class="start-btn inactive-btn"
+              disabled="true"
+            >
+              Start
+            </button>
+            <button type="button" class="stop-btn inactive-btn" disabled="true">
+              Stop
+            </button>
+          </div>
+          <div class="users-wrap">
+            <button type="button" class="ready-btn active-btn">
+              I'm ready
+            </button>
+            <ul class="ready-users"></ul>
           </div>
         </div>
       </section>

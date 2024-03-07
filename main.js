@@ -1,10 +1,13 @@
 import { initializeApp } from "firebase/app";
 import { getDatabase, ref, child, get, set } from "firebase/database";
+import checkIcon from "./check.svg";
 
 const refs = {
   timerClock: document.querySelector(".timer-clock"),
   startBtn: document.querySelector(".start-btn"),
   stopBtn: document.querySelector(".stop-btn"),
+  readyBtn: document.querySelector(".ready-btn"),
+  readyUsers: document.querySelector(".ready-users"),
 };
 
 const firebaseConfig = {
@@ -44,6 +47,7 @@ async function getFirebaseData() {
 
 refs.startBtn.addEventListener("click", startTimer);
 refs.stopBtn.addEventListener("click", stopTimer);
+refs.readyBtn.addEventListener("click", setReady);
 
 const STEP = 10;
 
@@ -58,8 +62,30 @@ let result = {
   stop: 0,
   isStart: false,
   current: 0,
+  isReady: 0,
 };
+
 let previousData;
+
+async function setReady() {
+  previousData = await getFirebaseData();
+  result = previousData;
+
+  if (result.isReady < 2) {
+    result.isReady += 1;
+    writeData(result);
+  }
+
+  refs.readyBtn.classList.remove("active-btn");
+  refs.readyBtn.classList.add("inactive-btn");
+  refs.readyBtn.classList.disabled = true;
+
+  if (previousData.isReady === 2) {
+    refs.readyBtn.classList.remove("active-btn");
+    refs.readyBtn.classList.add("inactive-btn");
+    refs.readyBtn.classList.disabled = true;
+  }
+}
 
 const check = setInterval(() => {
   checkData();
@@ -67,18 +93,66 @@ const check = setInterval(() => {
 
 async function checkData() {
   previousData = await getFirebaseData();
+  if (previousData.isReady === 0 || previousData.isStart) {
+    refs.readyUsers.innerHTML = ``;
+  }
+  if (
+    previousData.isReady > 0 &&
+    !previousData.isStart &&
+    document.querySelectorAll(".ready-message").length === 0
+  ) {
+    refs.readyUsers.insertAdjacentHTML(
+      "afterbegin",
+      `<li class="user"><img src="${checkIcon}" class="check-icon" /><p class="ready-message">First user is ready.</p></li>`
+    );
+    refs.readyUsers.firstElementChild.classList.add("user-visible");
+  } else if (
+    previousData.isReady === 2 &&
+    !previousData.isStart &&
+    document.querySelectorAll(".ready-message").length < 2
+  ) {
+    refs.readyUsers.insertAdjacentHTML(
+      "afterbegin",
+      `<li class="user"><img src="${checkIcon}" class="check-icon" /><p class="ready-message">Second user is ready.</p></li>`
+    );
+    refs.readyUsers.firstElementChild.classList.add("user-visible");
+  }
 
-  if (previousData.isStart) {
+  if (previousData.isReady < 0 || previousData.isReady >= 2) {
+    refs.readyBtn.disabled = true;
+    refs.readyBtn.classList.remove("active-btn");
+    refs.readyBtn.classList.add("inactive-btn");
+  } else if (previousData.isReady >= 0) {
+    refs.readyBtn.disabled = false;
+    refs.readyBtn.classList.add("active-btn");
+    refs.readyBtn.classList.remove("inactive-btn");
+  } else if (previousData.isReady < 2) {
+    refs.readyBtn.disabled = true;
+    refs.startBtn.classList.remove("active-btn");
+    refs.startBtn.classList.add("inactive-btn");
+  }
+
+  if (previousData.isStart || previousData.isReady !== 2) {
     refs.startBtn.disabled = true;
     refs.startBtn.classList.remove("active-btn");
     refs.startBtn.classList.add("inactive-btn");
-    refs.stopBtn.disabled = false;
-    refs.stopBtn.classList.add("active-btn");
-    refs.stopBtn.classList.remove("inactive-btn");
-  } else {
+    // refs.stopBtn.disabled = false;
+    // refs.stopBtn.classList.add("active-btn");
+    // refs.stopBtn.classList.remove("inactive-btn");
+  } else if (!previousData.isStart || previousData.isReady === 2) {
     refs.startBtn.disabled = false;
     refs.startBtn.classList.add("active-btn");
     refs.startBtn.classList.remove("inactive-btn");
+    // refs.stopBtn.disabled = true;
+    // refs.stopBtn.classList.remove("active-btn");
+    // refs.stopBtn.classList.add("inactive-btn");
+  }
+  if (previousData.isStart && previousData.isReady === 2) {
+    refs.stopBtn.disabled = false;
+    refs.stopBtn.classList.add("active-btn");
+    refs.stopBtn.classList.remove("inactive-btn");
+  }
+  if (!previousData.isStart && previousData.isReady !== 2) {
     refs.stopBtn.disabled = true;
     refs.stopBtn.classList.remove("active-btn");
     refs.stopBtn.classList.add("inactive-btn");
@@ -146,6 +220,7 @@ function startTimer() {
     start: new Date().getTime(),
     stop: 0,
     current: 0,
+    isReady: 2,
   };
   writeData(result);
 }
@@ -160,7 +235,12 @@ function stopTimer() {
     stop: stopDate,
     isStart: false,
     current: currentDate,
+    isReady: 0,
   };
 
   writeData(result);
+
+  refs.stopBtn.classList.remove("active-btn");
+  refs.stopBtn.classList.add("inactive-btn");
+  refs.stopBtn.disabled = true;
 }

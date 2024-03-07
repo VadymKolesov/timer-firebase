@@ -88,6 +88,7 @@ button {
 .timer-clock {
   font-size: 48px;
   font-weight: 300;
+  margin-bottom: 50px;
 }
 
 .timer-buttons {
@@ -98,14 +99,18 @@ button {
 .active-btn {
   background-color: var(--black);
   color: var(--white);
-  transition: all 400ms ease-out;
+  transition: all 200ms ease-out;
+  animation: animBtn 300ms ease-in-out;
 }
 
 .inactive-btn {
   background-color: var(--smoke-gray);
   color: var(--black);
-  transition: all 400ms ease-out;
-  animation: animBtn 400ms ease-in-out;
+  transition: all 200ms ease-out;
+}
+
+.ready-btn {
+  width: 100%;
 }
 
 @keyframes animBtn {
@@ -135,8 +140,46 @@ button {
   justify-content: center;
   align-items: center;
   gap: 30px;
-  padding: 60px 30px;
+  padding: 80px 30px 30px 30px;
   border-radius: 25px;
   background-color: var(--white);
   box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+}
+
+.users-wrap {
+  width: 100%;
+}
+
+.ready-users {
+  width: 100%;
+  color: rgb(54, 173, 31);
+  text-align: left;
+  font-size: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  margin-top: 20px;
+}
+
+.user {
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  animation: animReady 100ms ease-in;
+}
+
+.check-icon {
+  width: 20px;
+}
+
+@keyframes animReady {
+  0% {
+    max-height: 0;
+    opacity: 0;
+  }
+  100% {
+    max-height: 20px;
+    opacity: 1;
+  }
 }
