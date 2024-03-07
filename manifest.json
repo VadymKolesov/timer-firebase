@@ -1,7 +1,7 @@
 {
-  "name": "Salary Calculate",
-  "short_name": "salary-calculate",
-  "start_url": "./index.html",
+  "name": "Realtime Timer",
+  "short_name": "Realtime Timer",
+  "start_url": "/index.html",
   "display": "standalone",
   "background_color": "#ffffff",
   "theme_color": "#171718",
