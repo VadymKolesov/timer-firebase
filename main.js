@@ -56,34 +56,64 @@ let stopDate;
 let currentDate;
 let timerInterval;
 let formatedTime;
-let result = {
-  id: "1",
-  start: 0,
-  stop: 0,
-  isStart: false,
-  current: 0,
-  isReady: 0,
+let result;
+let previousData;
+
+const enableReadyBtn = () => {
+  refs.readyBtn.disabled = false;
+  refs.readyBtn.classList.add("active-btn");
+  refs.readyBtn.classList.remove("inactive-btn");
 };
 
-let previousData;
+const disableReadyBtn = () => {
+  refs.readyBtn.disabled = true;
+  refs.readyBtn.classList.remove("active-btn");
+  refs.readyBtn.classList.add("inactive-btn");
+};
+
+const enableStartBtn = () => {
+  refs.startBtn.disabled = false;
+  refs.startBtn.classList.add("active-btn");
+  refs.startBtn.classList.remove("inactive-btn");
+};
+
+const disableStartBtn = () => {
+  refs.startBtn.disabled = true;
+  refs.startBtn.classList.remove("active-btn");
+  refs.startBtn.classList.add("inactive-btn");
+};
+
+const enableStopBtn = () => {
+  refs.stopBtn.disabled = false;
+  refs.stopBtn.classList.add("active-btn");
+  refs.stopBtn.classList.remove("inactive-btn");
+};
+
+const disableStopBtn = () => {
+  refs.stopBtn.disabled = true;
+  refs.stopBtn.classList.remove("active-btn");
+  refs.stopBtn.classList.add("inactive-btn");
+};
+
+const setReadyID = (id) => {
+  localStorage.setItem("readyID", id);
+};
+
+const getReadyID = () => {
+  return JSON.parse(localStorage.getItem("readyID"));
+};
 
 async function setReady() {
   previousData = await getFirebaseData();
-  result = previousData;
 
-  if (result.isReady < 2) {
-    result.isReady += 1;
-    writeData(result);
+  if (previousData.isReady < 2) {
+    previousData.isReady += 1;
+    writeData(previousData);
+    setReadyID(previousData.isReady);
   }
 
-  refs.readyBtn.classList.remove("active-btn");
-  refs.readyBtn.classList.add("inactive-btn");
-  refs.readyBtn.classList.disabled = true;
-
   if (previousData.isReady === 2) {
-    refs.readyBtn.classList.remove("active-btn");
-    refs.readyBtn.classList.add("inactive-btn");
-    refs.readyBtn.classList.disabled = true;
+    disableReadyBtn();
   }
 }
 
@@ -91,87 +121,72 @@ const check = setInterval(() => {
   checkData();
 }, 100);
 
-async function checkData() {
-  previousData = await getFirebaseData();
-  if (previousData.isReady === 0 || previousData.isStart) {
-    refs.readyUsers.innerHTML = ``;
-  }
-  if (
-    previousData.isReady > 0 &&
-    !previousData.isStart &&
-    document.querySelectorAll(".ready-message").length === 0
+function showUsers(data) {
+  const readyMessages = document.querySelectorAll(".user");
+
+  if (data.isStart) {
+    refs.readyUsers.innerHTML = "";
+    return;
+  } else if (
+    data.isReady === 1 &&
+    !data.isStart &&
+    readyMessages.length === 0
   ) {
     refs.readyUsers.insertAdjacentHTML(
       "afterbegin",
       `<li class="user"><img src="${checkIcon}" class="check-icon" /><p class="ready-message">First user is ready.</p></li>`
     );
     refs.readyUsers.firstElementChild.classList.add("user-visible");
-  } else if (
-    previousData.isReady === 2 &&
-    !previousData.isStart &&
-    document.querySelectorAll(".ready-message").length < 2
-  ) {
+  } else if (data.isReady === 2 && !data.isStart && readyMessages.length < 2) {
     refs.readyUsers.insertAdjacentHTML(
       "afterbegin",
       `<li class="user"><img src="${checkIcon}" class="check-icon" /><p class="ready-message">Second user is ready.</p></li>`
     );
     refs.readyUsers.firstElementChild.classList.add("user-visible");
   }
+}
 
-  if (previousData.isReady < 0 || previousData.isReady >= 2) {
-    refs.readyBtn.disabled = true;
-    refs.readyBtn.classList.remove("active-btn");
-    refs.readyBtn.classList.add("inactive-btn");
-  } else if (previousData.isReady >= 0) {
-    refs.readyBtn.disabled = false;
-    refs.readyBtn.classList.add("active-btn");
-    refs.readyBtn.classList.remove("inactive-btn");
-  } else if (previousData.isReady < 2) {
-    refs.readyBtn.disabled = true;
-    refs.startBtn.classList.remove("active-btn");
-    refs.startBtn.classList.add("inactive-btn");
-  }
+async function checkData() {
+  previousData = await getFirebaseData();
+  const readyID = await getReadyID();
+  const isReady = previousData.isReady;
+  const isStart = previousData.isStart;
 
-  if (previousData.isStart || previousData.isReady !== 2) {
-    refs.startBtn.disabled = true;
-    refs.startBtn.classList.remove("active-btn");
-    refs.startBtn.classList.add("inactive-btn");
-    // refs.stopBtn.disabled = false;
-    // refs.stopBtn.classList.add("active-btn");
-    // refs.stopBtn.classList.remove("inactive-btn");
-  } else if (!previousData.isStart || previousData.isReady === 2) {
-    refs.startBtn.disabled = false;
-    refs.startBtn.classList.add("active-btn");
-    refs.startBtn.classList.remove("inactive-btn");
-    // refs.stopBtn.disabled = true;
-    // refs.stopBtn.classList.remove("active-btn");
-    // refs.stopBtn.classList.add("inactive-btn");
-  }
-  if (previousData.isStart && previousData.isReady === 2) {
-    refs.stopBtn.disabled = false;
-    refs.stopBtn.classList.add("active-btn");
-    refs.stopBtn.classList.remove("inactive-btn");
-  }
-  if (!previousData.isStart && previousData.isReady !== 2) {
-    refs.stopBtn.disabled = true;
-    refs.stopBtn.classList.remove("active-btn");
-    refs.stopBtn.classList.add("inactive-btn");
+  if (!isStart && isReady < 2) {
+    enableReadyBtn();
+    disableStopBtn();
+  } else if (!isStart && isReady >= 2) {
+    disableReadyBtn();
+    enableStartBtn();
+  } else if (isStart) {
+    disableStartBtn();
+    enableStopBtn();
+    setReadyID(3);
   }
 
-  if (previousData.isStart && !timerInterval) {
-    startDate = previousData.start;
+  if (readyID === isReady) {
+    disableReadyBtn();
+  }
+
+  showUsers(previousData);
+  updateClock(previousData);
+}
+
+function updateClock(data) {
+  if (data.isStart && !timerInterval) {
+    startDate = data.start;
     timerInterval = setInterval(startInterval, STEP);
-  } else if (!previousData.isStart && timerInterval > 1) {
+  } else if (!data.isStart && timerInterval > 1) {
     clearInterval(timerInterval);
     timerInterval = false;
-    formatedTime = convertMS(previousData.current - previousData.start);
+    formatedTime = convertMS(data.current - data.start);
     rendeClock(
       formatedTime.minutes,
       formatedTime.secunds,
       formatedTime.milisecunds
     );
-  } else if (!previousData.isStart && !timerInterval) {
-    formatedTime = convertMS(previousData.current - previousData.start);
+  } else if (!data.isStart && !timerInterval) {
+    formatedTime = convertMS(data.current - data.start);
     rendeClock(
       formatedTime.minutes,
       formatedTime.secunds,
@@ -222,6 +237,7 @@ function startTimer() {
     current: 0,
     isReady: 2,
   };
+
   writeData(result);
 }
 
@@ -239,8 +255,4 @@ function stopTimer() {
   };
 
   writeData(result);
-
-  refs.stopBtn.classList.remove("active-btn");
-  refs.stopBtn.classList.add("inactive-btn");
-  refs.stopBtn.disabled = true;
 }
