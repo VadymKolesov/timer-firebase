@@ -8,17 +8,17 @@
   "orientation": "portrait-primary",
   "icons": [
     {
-      "src": "./public/timer.png",
+      "src": "./timer.png",
       "type": "image/png",
       "sizes": "144x144"
     },
     {
-      "src": "./public/timer.png",
+      "src": "./timer.png",
       "type": "image/png",
       "sizes": "512x512"
     },
     {
-      "src": "./public/timer.png",
+      "src": "./timer.png",
       "type": "image/png",
       "sizes": "144x144",
       "purpose": "maskable"
