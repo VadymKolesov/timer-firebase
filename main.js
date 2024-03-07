@@ -1,6 +1,11 @@
 import { initializeApp } from "firebase/app";
 import { getDatabase, ref, child, get, set } from "firebase/database";
-import { getFirestore, collection, getDocs } from "firebase/firestore/lite";
+
+const refs = {
+  timerClock: document.querySelector(".timer-clock"),
+  startBtn: document.querySelector(".start-btn"),
+  stopBtn: document.querySelector(".stop-btn"),
+};
 
 const firebaseConfig = {
   apiKey: "AIzaSyCuVjEugcofQtVmUyg1Bm1vmoIkKJ7-dfU",
@@ -13,8 +18,7 @@ const firebaseConfig = {
   appId: "1:544796112036:web:dea584d81b16885d642231",
 };
 
-const app = initializeApp(firebaseConfig);
-const db = getDatabase();
+initializeApp(firebaseConfig);
 
 function writeData(data) {
   const db = getDatabase();
@@ -38,24 +42,11 @@ async function getFirebaseData() {
   return data;
 }
 
-async function test() {
-  const s = await getFirebaseData();
-  console.log(s);
-}
-
-const refs = {
-  timerClock: document.querySelector(".timer-clock"),
-  startBtn: document.querySelector(".start-btn"),
-  stopBtn: document.querySelector(".stop-btn"),
-};
-
 refs.startBtn.addEventListener("click", startTimer);
 refs.stopBtn.addEventListener("click", stopTimer);
 
-const BASE_URL = "https://65e867424bb72f0a9c4f37f6.mockapi.io/timerData/1";
 const STEP = 10;
 
-let fetchData;
 let startDate;
 let stopDate;
 let currentDate;
@@ -70,22 +61,6 @@ let result = {
 };
 let previousData;
 
-async function getData() {
-  const data = await fetch(BASE_URL).then((r) => r.json());
-  return data;
-}
-
-function updateData() {
-  const options = {
-    method: "PUT",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(result),
-  };
-  fetch(BASE_URL, options).then((r) => r.json());
-}
-
 const check = setInterval(() => {
   checkData();
 }, 100);
@@ -95,14 +70,18 @@ async function checkData() {
 
   if (previousData.isStart) {
     refs.startBtn.disabled = true;
-    refs.startBtn.style.opacity = "0.5";
+    refs.startBtn.classList.remove("active-btn");
+    refs.startBtn.classList.add("inactive-btn");
     refs.stopBtn.disabled = false;
-    refs.stopBtn.style.opacity = "1";
+    refs.stopBtn.classList.add("active-btn");
+    refs.stopBtn.classList.remove("inactive-btn");
   } else {
     refs.startBtn.disabled = false;
-    refs.startBtn.style.opacity = "1";
+    refs.startBtn.classList.add("active-btn");
+    refs.startBtn.classList.remove("inactive-btn");
     refs.stopBtn.disabled = true;
-    refs.stopBtn.style.opacity = "0.5";
+    refs.stopBtn.classList.remove("active-btn");
+    refs.stopBtn.classList.add("inactive-btn");
   }
 
   if (previousData.isStart && !timerInterval) {
@@ -111,6 +90,13 @@ async function checkData() {
   } else if (!previousData.isStart && timerInterval > 1) {
     clearInterval(timerInterval);
     timerInterval = false;
+    formatedTime = convertMS(previousData.current - previousData.start);
+    rendeClock(
+      formatedTime.minutes,
+      formatedTime.secunds,
+      formatedTime.milisecunds
+    );
+  } else if (!previousData.isStart && !timerInterval) {
     formatedTime = convertMS(previousData.current - previousData.start);
     rendeClock(
       formatedTime.minutes,

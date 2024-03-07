@@ -2,8 +2,9 @@
   --juce-orange: #f85a00;
   --nightmare: #132530;
   --nightmare-light: #1f3340;
-  --smoke-gray: #b8bec1;
+  --smoke-gray: #f5f7fa;
   --white: #ffffff;
+  --black: #171718;
 }
 
 *,
@@ -65,7 +66,8 @@ a {
 
 body {
   margin: 0;
-  font-family: Roboto, sans-serif, Arial, sans-serif;
+  font-family: "Nunito Sans", sans-serif;
+  background-color: var(--smoke-gray);
 }
 
 .container {
@@ -75,28 +77,67 @@ body {
 
 button {
   color: white;
-  padding: 20px 40px;
+  padding: 20px 50px;
   border-radius: 10px;
+  font-size: 18px;
+  font-weight: 300;
 }
 
 /**! TIMER !**/
 
 .timer-clock {
   font-size: 48px;
+  font-weight: 300;
 }
 
-.start-btn {
-  background-color: green;
+.timer-buttons {
+  display: flex;
+  gap: 15px;
 }
 
-.stop-btn {
-  background-color: #f85a00;
+.active-btn {
+  background-color: var(--black);
+  color: var(--white);
+  transition: all 400ms ease-out;
+}
+
+.inactive-btn {
+  background-color: var(--smoke-gray);
+  color: var(--black);
+  transition: all 400ms ease-out;
+  animation: animBtn 400ms ease-in-out;
+}
+
+@keyframes animBtn {
+  0% {
+    scale: 1;
+  }
+
+  70% {
+    scale: 0.93;
+  }
+
+  100% {
+    scale: 1;
+  }
+}
+
+.section-timer {
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .timer-wrap {
+  width: 100%;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  gap: 20px;
+  gap: 30px;
+  padding: 60px 0;
+  border-radius: 25px;
+  background-color: var(--white);
+  box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
 }
