@@ -10,12 +10,14 @@
     {
       "src": "/timer.png",
       "type": "image/png",
-      "sizes": "144x144"
+      "sizes": "144x144",
+      "purpose": "any"
     },
     {
       "src": "/timer.png",
       "type": "image/png",
-      "sizes": "512x512"
+      "sizes": "512x512",
+      "purpose": "any"
     },
     {
       "src": "/timer.png",
