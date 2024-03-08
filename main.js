@@ -8,6 +8,8 @@ const refs = {
   stopBtn: document.querySelector(".stop-btn"),
   readyBtn: document.querySelector(".ready-btn"),
   readyUsers: document.querySelector(".ready-users"),
+  readyContent: document.querySelector(".ready-content"),
+  loader: document.querySelector(".loader-wrap"),
 };
 
 const firebaseConfig = {
@@ -47,7 +49,7 @@ async function getFirebaseData() {
 
 refs.startBtn.addEventListener("click", startTimer);
 refs.stopBtn.addEventListener("click", stopTimer);
-refs.readyBtn.addEventListener("click", setReady);
+refs.readyContent.addEventListener("click", setReady);
 
 const STEP = 10;
 
@@ -60,15 +62,15 @@ let result;
 let previousData;
 
 const enableReadyBtn = () => {
-  refs.readyBtn.disabled = false;
-  refs.readyBtn.classList.add("active-btn");
-  refs.readyBtn.classList.remove("inactive-btn");
+  refs.readyContent.disabled = false;
+  refs.readyContent.classList.add("active-btn");
+  refs.readyContent.classList.remove("inactive-btn");
 };
 
 const disableReadyBtn = () => {
-  refs.readyBtn.disabled = true;
-  refs.readyBtn.classList.remove("active-btn");
-  refs.readyBtn.classList.add("inactive-btn");
+  refs.readyContent.disabled = true;
+  refs.readyContent.classList.remove("active-btn");
+  refs.readyContent.classList.add("inactive-btn");
 };
 
 const enableStartBtn = () => {
@@ -146,27 +148,50 @@ function showUsers(data) {
   }
 }
 
+function setReadyBtnContent(data, readyID) {
+  if (data.isReady === 2 && !data.isStart) {
+    refs.readyBtn.textContent = `All users ready`;
+    refs.loader.classList.add("hide-loader");
+    return;
+  } else if (data.isStart) {
+    refs.readyBtn.textContent = `Timer is active`;
+    return;
+  } else if (data.isReady === 0) {
+    refs.readyBtn.textContent = `I'm ready`;
+    return;
+  } else if (data.isReady === readyID) {
+    refs.readyBtn.textContent = `Waiting for users`;
+    refs.loader.classList.remove("hide-loader");
+    return;
+  }
+}
+
 async function checkData() {
   previousData = await getFirebaseData();
   const readyID = await getReadyID();
   const isReady = previousData.isReady;
   const isStart = previousData.isStart;
 
-  if (!isStart && isReady < 2) {
+  if (!isStart && isReady < 2 && readyID !== isReady) {
     enableReadyBtn();
     disableStopBtn();
   } else if (!isStart && isReady >= 2) {
     disableReadyBtn();
     enableStartBtn();
+    // refs.readyBtn.innerHTML = `All users ready`;
   } else if (isStart) {
     disableStartBtn();
     enableStopBtn();
+    // refs.readyBtn.innerHTML = `Timer is active`;
     setReadyID(3);
   }
 
   if (readyID === isReady) {
     disableReadyBtn();
+    // refs.readyBtn.innerHTML = `Waiting for second user`;
   }
+
+  setReadyBtnContent(previousData, readyID);
 
   showUsers(previousData);
   updateClock(previousData);
