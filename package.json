@@ -13,6 +13,7 @@
   },
   "dependencies": {
     "firebase": "^10.8.1",
-    "firestore": "^1.1.6"
+    "firestore": "^1.1.6",
+    "nanoid": "^5.0.6"
   }
 }

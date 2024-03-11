@@ -51,8 +51,27 @@
           </div>
         </div>
       </section>
+      <section class="section-list container">
+        <div class="list-btns">
+          <button type="button" class="reset-btn">Reset</button>
+          <button type="button" class="send-btn">Send</button>
+        </div>
+        <ul class="steps-list"></ul>
+      </section>
     </main>
     <footer></footer>
+    <div class="backdrop visually-hidden post-backdrop">
+      <div class="loader-backdrop"></div>
+    </div>
+    <div class="backdrop visually-hidden reset-backdrop">
+      <div class="reset-modal">
+        <p>Are you sure?</p>
+        <div>
+          <button type="button" class="no-btn">No</button>
+          <button type="button" class="yes-btn">Yes</button>
+        </div>
+      </div>
+    </div>
     <script type="module" src="./main.js"></script>
   </body>
 </html>

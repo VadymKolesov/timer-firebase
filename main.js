@@ -1,6 +1,29 @@
 import { initializeApp } from "firebase/app";
-import { getDatabase, ref, child, get, set } from "firebase/database";
+import { nanoid } from "nanoid";
+import {
+  getDatabase,
+  ref,
+  child,
+  get,
+  set,
+  push,
+  onValue,
+  onChildAdded,
+} from "firebase/database";
 import checkIcon from "./check.svg";
+
+import {
+  doc,
+  onSnapshot,
+  getFirestore,
+  addDoc,
+  setDoc,
+  getDocs,
+  collection,
+  initializeFirestore,
+  getDoc,
+  documentId,
+} from "firebase/firestore";
 
 const refs = {
   timerClock: document.querySelector(".timer-clock"),
@@ -10,6 +33,15 @@ const refs = {
   readyUsers: document.querySelector(".ready-users"),
   readyContent: document.querySelector(".ready-content"),
   loader: document.querySelector(".loader-wrap"),
+  stepsList: document.querySelector(".steps-list"),
+  deleteBtn: document.querySelector(".delete-btn"),
+  btnsList: document.querySelector(".list-btns"),
+  resetBtn: document.querySelector(".reset-btn"),
+  sendBtn: document.querySelector(".send-btn"),
+  postBackdrop: document.querySelector(".post-backdrop"),
+  resetBackdrop: document.querySelector(".reset-backdrop"),
+  nobtn: document.querySelector(".no-btn"),
+  yesbtn: document.querySelector(".yes-btn"),
 };
 
 const firebaseConfig = {
@@ -23,7 +55,9 @@ const firebaseConfig = {
   appId: "1:544796112036:web:dea584d81b16885d642231",
 };
 
-initializeApp(firebaseConfig);
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+let stepsList;
 
 function writeData(data) {
   const db = getDatabase();
@@ -47,9 +81,74 @@ async function getFirebaseData() {
   return data;
 }
 
+async function fetchList() {
+  const docRef = await getDocs(collection(db, "list"));
+
+  const unsub = onSnapshot(doc(db, "list", "Oi4nFSVsaGY2GQtak5IO"), (doc) => {
+    const data = doc.data().items.reverse();
+    refs.stepsList.innerHTML = updateList(data);
+    if (document.querySelectorAll(".step-item").length > 0) {
+      refs.btnsList.classList.add("btns-list-visible");
+    } else {
+      refs.btnsList.classList.remove("btns-list-visible");
+    }
+  });
+}
+
+fetchList();
+
+function getStepsList() {
+  return getDocs(collection(db, "list"));
+}
+
+async function addStepToList(data) {
+  const docRef = await setDoc(doc(db, "list", "Oi4nFSVsaGY2GQtak5IO"), {
+    items: data,
+  });
+}
+
+function updateList(list) {
+  return list
+    .map(
+      (el) => `
+    <li class="step-item">
+      <div>
+        <p class="step">Step ${el.step}</p>
+        <p class="time">${el.time}</p>
+      </div>
+      <button id="${el.id}" type="button" class="delete-btn">Delete</button>
+    </li>
+  `
+    )
+    .join("");
+}
+
+// async function getStepsList() {
+//   const dbRef = ref(getDatabase());
+//   const data = await get(child(dbRef, `list/`))
+//     .then((snapshot) => {
+//       if (snapshot.exists()) {
+//         const data = snapshot.val();
+//         return data;
+//       } else {
+//         console.log("No data available");
+//       }
+//     })
+//     .catch((error) => {
+//       console.error(error);
+//     });
+// }
+
+// getStepsList();
+
 refs.startBtn.addEventListener("click", startTimer);
 refs.stopBtn.addEventListener("click", stopTimer);
 refs.readyContent.addEventListener("click", setReady);
+refs.stepsList.addEventListener("click", deleteStep);
+refs.resetBtn.addEventListener("click", openResetModal);
+refs.sendBtn.addEventListener("click", sendStepsData);
+refs.nobtn.addEventListener("click", closeResetModal);
+refs.yesbtn.addEventListener("click", resetSteps);
 
 const STEP = 10;
 
@@ -266,7 +365,7 @@ function startTimer() {
   writeData(result);
 }
 
-function stopTimer() {
+async function stopTimer() {
   startDate = previousData.start;
   stopDate = new Date().getTime();
 
@@ -280,4 +379,99 @@ function stopTimer() {
   };
 
   writeData(result);
+
+  const data = await getStepsList();
+  data.forEach((doc) => {
+    const prevData = doc.data().items;
+    let stepNum = 0;
+    prevData.forEach((e) => {
+      stepNum += 1;
+      e.step = stepNum;
+    });
+    const newItem = {
+      id: nanoid(),
+      step: stepNum + 1,
+      time: refs.timerClock.textContent,
+    };
+    const newData = [...prevData, newItem];
+    addStepToList(newData);
+  });
+}
+
+async function deleteStep(e) {
+  if (e.target.nodeName !== "BUTTON") {
+    return;
+  }
+
+  const data = await getStepsList();
+  const id = e.target.id;
+
+  data.forEach((doc) => {
+    const prevData = doc.data().items;
+    let stepNum = 0;
+    const filteredData = prevData.filter((el) => el.id !== id);
+    filteredData.forEach((e) => {
+      stepNum += 1;
+      e.step = stepNum;
+    });
+    addStepToList(filteredData);
+  });
+}
+
+function openResetModal() {
+  refs.resetBackdrop.classList.remove("visually-hidden");
+}
+
+function closeResetModal() {
+  refs.resetBackdrop.classList.add("visually-hidden");
+}
+
+function resetSteps() {
+  addStepToList([]);
+  refs.resetBackdrop.classList.add("visually-hidden");
+}
+
+async function sendStepsData() {
+  const data = await getStepsList();
+
+  data.forEach((doc) => {
+    const prevData = doc.data().items;
+    postStepsData(prevData);
+  });
+}
+
+async function postStepsData(data) {
+  const options = {
+    method: "POST",
+    body: JSON.stringify(data),
+    headers: {
+      "Content-type": "text/plain;charset=utf-8",
+    },
+  };
+
+  document.querySelector("body").style.overflow = "hidden";
+  refs.postBackdrop.classList.remove("visually-hidden");
+
+  fetch(
+    "https://script.google.com/macros/s/AKfycbxkgREKaVwId_CSh-A9tGSpYJBZAhpViMmn9Qmep3g4W3UwEscNvenCwPgtuyVRCVrA/exec",
+    options
+  )
+    .then((res) => {
+      console.log("done");
+      document.querySelector("body").style.overflow = "visible";
+      refs.postBackdrop.innerHTML = `<div class="done-message"><img src="${checkIcon}" class="done-icon" /><p>Done</p></div>`;
+      setTimeout(() => {
+        refs.postBackdrop.classList.add("visually-hidden");
+        refs.postBackdrop.innerHTML = `<div class="loader-backdrop"></div>`;
+      }, 1000);
+    })
+    .catch((err) => {
+      console.log(err);
+      refs.postBackdrop.innerHTML = `<p class="error-message">Oops. Something went wrong. Please, try again.</p>`;
+      setTimeout(() => {
+        document.querySelector("body").style.overflow = "visible";
+        refs.postBackdrop.classList.add("visually-hidden");
+        refs.postBackdrop.innerHTML = `<div class="loader-backdrop"></div>`;
+      }, 2000);
+    });
 }

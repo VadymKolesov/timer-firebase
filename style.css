@@ -58,6 +58,8 @@ input[type="number"]::-webkit-inner-spin-button {
   clip-path: inset(100%);
   clip: rect(0 0 0 0);
   overflow: hidden;
+  background-color: rgba(255, 255, 255, 0);
+  transition: background-color 300ms ease-in-out;
 }
 
 a {
@@ -68,6 +70,10 @@ body {
   margin: 0;
   font-family: "Nunito Sans", sans-serif;
   background-color: var(--smoke-gray);
+}
+
+main {
+  padding: 60px 0;
 }
 
 .container {
@@ -130,7 +136,6 @@ button {
 }
 
 .section-timer {
-  height: 100vh;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -278,4 +283,178 @@ button {
     box-shadow: 0 -5px var(--black);
     height: 8px;
   }
+}
+
+/* STEPS */
+
+.section-list {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+}
+
+.steps-list {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  margin-top: 40px;
+}
+
+.step-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 350px;
+  background-color: var(--white);
+  padding: 20px 30px;
+  border-radius: 15px;
+  box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+  overflow: hidden;
+}
+
+.step-item div {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.step {
+  font-weight: 500;
+}
+
+.time {
+  font-weight: 300;
+  font-size: 14px;
+}
+
+.delete-btn {
+  background-color: rgb(230, 14, 14);
+  padding: 15px 20px;
+  font-size: 14px;
+  line-height: 1;
+}
+
+.list-btns {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 0;
+  max-width: 350px;
+  overflow: hidden;
+  max-height: 0;
+  gap: 20px;
+  opacity: 0;
+}
+
+.reset-btn {
+  padding: 20px 40px;
+  font-size: 14px;
+  line-height: 1;
+  background-color: var(--white);
+  color: var(--black);
+  box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+}
+
+.send-btn {
+  padding: 20px 40px;
+  font-size: 14px;
+  line-height: 1;
+  background-color: var(--black);
+}
+
+.btns-list-visible {
+  opacity: 1;
+  max-height: 55px;
+  margin-top: 40px;
+}
+
+/* BACKDROP */
+
+.backdrop {
+  position: fixed;
+  top: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(255, 255, 255, 0.7);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  transition: background-color 300ms ease-in-out;
+}
+
+.done-message {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  scale: 0.7;
+  animation: doneAnim 100ms ease-in forwards;
+  gap: 5px;
+}
+
+.done-icon {
+  width: 30px;
+}
+
+@keyframes doneAnim {
+  0% {
+    scale: 0.7;
+  }
+  100% {
+    scale: 1;
+  }
+}
+
+.error-message {
+  color: var(--black);
+  font-size: 18px;
+  font-weight: 500;
+}
+
+.loader-backdrop {
+  width: 50px;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: radial-gradient(farthest-side, var(--black) 94%, #0000) top/8px
+      8px no-repeat,
+    conic-gradient(#0000 30%, var(--black));
+  -webkit-mask: radial-gradient(farthest-side, #0000 calc(100% - 8px), #000 0);
+  animation: l13 1s infinite linear;
+}
+@keyframes l13 {
+  100% {
+    transform: rotate(1turn);
+  }
+}
+
+/* MODAL */
+
+.reset-modal {
+  background-color: var(--white);
+  box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+  padding: 60px 30px;
+  border-radius: 25px;
+  display: flex;
+  flex-direction: column;
+  gap: 60px;
+}
+
+.reset-modal p {
+  font-size: 24px;
+}
+
+.reset-modal div {
+  display: flex;
+  gap: 10px;
+}
+
+.reset-modal button {
+  width: calc((100% - 10px) / 2);
+}
+
+.no-btn {
+  background-color: var(--black);
+}
+
+.yes-btn {
+  background-color: rgb(230, 14, 14);
 }
