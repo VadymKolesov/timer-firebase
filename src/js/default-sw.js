@@ -8,7 +8,7 @@ import {
   logOut,
   onBack,
 } from "./components/utilites";
-import editIcon from "/edit.svg";
+import editIcon from "../icons/edit.svg";
 import { onErrorToast } from "./components/utilites";
 
 checkLogin();

@@ -1,4 +1,4 @@
-import warningIcon from "/warning.svg";
+import warningIcon from "../../icons/warning.svg";
 import Toastify from "toastify-js";
 import "toastify-js/src/toastify.css";
 

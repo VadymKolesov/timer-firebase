@@ -1,5 +1,5 @@
 import { refs } from "./refs";
-import checkIcon from "/check.svg";
+import checkIcon from "../../icons/check.svg";
 
 export function showUsers(data) {
   const readyID = JSON.parse(localStorage.getItem("readyID"));
