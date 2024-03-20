@@ -1,4 +1,4 @@
-import * as FirebaseApi from "/service/firebase-api";
+import * as FirebaseApi from "../service/firebase-api";
 import { refs } from "./components/refs";
 import { nanoid } from "nanoid";
 import {

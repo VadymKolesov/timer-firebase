@@ -1,4 +1,4 @@
-import * as FirebaseApi from "/service/firebase-api";
+import * as FirebaseApi from "../service/firebase-api";
 import * as ManageListeners from "./components/manage-listeners";
 import { refs } from "./components/refs";
 import { checkLogin } from "./components/utilites";

@@ -11,11 +11,8 @@ import {
 } from "firebase/firestore";
 import firebaseConfig from "./firebase-config";
 import { db } from "./database";
-import {
-  manageBtns,
-  manageBtnsDefault,
-} from "../src/js/components/manage-btns";
-import { manageWatchInterval } from "../src/js/components/watch";
+import { manageBtns, manageBtnsDefault } from "../js/components/manage-btns";
+import { manageWatchInterval } from "../js/components/watch";
 import { showUsers } from "/src/js/components/manage-users";
 import { renderStepsList } from "/src/js/components/render-steps-list";
 
