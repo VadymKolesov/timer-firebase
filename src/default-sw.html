@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="manifest" href="/manifest.json" />
+    <link rel="stylesheet" href="/style.css" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1, user-scalable=no"
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Nunito+Sans:ital,opsz,wght@0,6..12,200..1000;1,6..12,200..1000&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="icon" type="image/svg" href="/timer-icon.svg" />
+    <meta name="theme-color" content="#171718" />
+    <title>Timer</title>
+  </head>
+  <body>
+    <header>
+      <nav>
+        <button type="button" class="back-btn">
+          <img src="/arrow-left.svg" />
+        </button>
+        <p class="nav-name"></p>
+        <button type="button" class="log-out-btn">
+          <img src="/log-out.svg" />
+        </button>
+      </nav>
+      <div id="task" class="task-wrap">
+        <p class="username"></p>
+        <p class="task-description">
+          Before you begin, please enter the name of the task in the box below
+          and click on the "Save" button.
+        </p>
+
+        <form class="task-form">
+          <input
+            class="task-input"
+            type="text"
+            placeholder="Please, enter the task here"
+          />
+          <button type="submit" class="save-btn active-btn">Save</button>
+        </form>
+      </div>
+    </header>
+    <main>
+      <section class="section-timer container">
+        <div class="timer-wrap">
+          <h1 class="timer-clock">00:00,000</h1>
+          <div class="timer-buttons">
+            <button
+              type="button"
+              class="start-btn inactive-btn"
+              disabled="true"
+            >
+              Start
+            </button>
+            <button type="button" class="stop-btn inactive-btn" disabled="true">
+              Stop
+            </button>
+          </div>
+        </div>
+      </section>
+      <section class="section-list container">
+        <ul class="steps-list"></ul>
+        <div class="list-btns">
+          <button type="button" class="reset-btn">Reset</button>
+          <button type="button" class="send-btn">Send</button>
+        </div>
+      </section>
+    </main>
+    <footer></footer>
+    <div class="backdrop visually-hidden post-backdrop">
+      <div class="loader-backdrop"></div>
+    </div>
+    <div class="backdrop visually-hidden reset-backdrop">
+      <div class="reset-modal">
+        <p>Are you sure?</p>
+        <div>
+          <button type="button" class="no-btn">No</button>
+          <button type="button" class="yes-btn">Yes</button>
+        </div>
+      </div>
+    </div>
+    <script type="module" src="./js/default-sw.js"></script>
+  </body>
+</html>

@@ -19,59 +19,30 @@
     <title>Timer</title>
   </head>
   <body>
-    <header></header>
+    <header>
+      <nav>
+        <button type="button" class="back-btn" style="opacity: 0" disabled>
+          <img src="/arrow-left.svg" />
+        </button>
+        <p class="nav-name"></p>
+        <button type="button" class="log-out-btn">
+          <img src="/log-out.svg" />
+        </button>
+      </nav>
+    </header>
     <main>
-      <section class="section-timer container">
-        <div class="timer-wrap">
-          <h1 class="timer-clock">00:00,000</h1>
-          <div class="timer-buttons">
-            <button
-              type="button"
-              class="start-btn inactive-btn"
-              disabled="true"
-            >
-              Start
-            </button>
-            <button type="button" class="stop-btn inactive-btn" disabled="true">
-              Stop
-            </button>
-          </div>
-          <div class="users-wrap">
-            <button class="ready-content">
-              <div type="button" class="ready-btn">I'm ready</div>
-              <div class="loader-wrap hide-loader">
-                <div class="loader">
-                  <div
-                    class="justify-content-center jimu-primary-loading"
-                  ></div>
-                </div>
-              </div>
-            </button>
-            <ul class="ready-users"></ul>
-          </div>
-        </div>
-      </section>
-      <section class="section-list container">
-        <div class="list-btns">
-          <button type="button" class="reset-btn">Reset</button>
-          <button type="button" class="send-btn">Send</button>
-        </div>
-        <ul class="steps-list"></ul>
-      </section>
+      <ul class="rooms-list">
+        <li class="room-item">
+          <a href="/src/default-sw.html" class="room-link"
+            ><p>Stop Watch</p>
+            <div class="room-indicator"></div
+          ></a>
+        </li>
+        <li class="room-item">
+          <a href="#" style="opacity: 0.2" class="room-link">Coming soon...</a>
+        </li>
+      </ul>
     </main>
-    <footer></footer>
-    <div class="backdrop visually-hidden post-backdrop">
-      <div class="loader-backdrop"></div>
-    </div>
-    <div class="backdrop visually-hidden reset-backdrop">
-      <div class="reset-modal">
-        <p>Are you sure?</p>
-        <div>
-          <button type="button" class="no-btn">No</button>
-          <button type="button" class="yes-btn">Yes</button>
-        </div>
-      </div>
-    </div>
-    <script type="module" src="./main.js"></script>
+    <script type="module" src="/main.js"></script>
   </body>
 </html>
