@@ -11,7 +11,7 @@ import {
 import editIcon from "/edit.svg";
 import { onErrorToast } from "./components/utilites";
 
-checkLogin();
+// checkLogin();
 checkTask();
 
 refs.backBtn.addEventListener("click", onBack);
