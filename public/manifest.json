@@ -1,10 +1,10 @@
 {
-  "name": "Realtime Timer",
-  "short_name": "Realtime Timer",
+  "name": "Realtime Stopwatch",
+  "short_name": "Realtime Stopwatch",
   "start_url": "/index.html",
   "display": "standalone",
   "background_color": "#ffffff",
-  "theme_color": "#171718",
+  "theme_color": "#ffffff",
   "orientation": "portrait-primary",
   "icons": [
     {
