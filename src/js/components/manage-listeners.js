@@ -3,7 +3,7 @@ import {
   setData,
   getStepsList,
   addStepToList,
-} from "../../../service/firebase-api";
+} from "/service/firebase-api";
 import * as Utilites from "./utilites";
 import { refs } from "./refs";
 import { nanoid } from "nanoid";

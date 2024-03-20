@@ -1,4 +1,4 @@
-import { getUsers } from "../../service/firebase-api";
+import { getUsers } from "/service/firebase-api";
 import { refs } from "./components/refs";
 import { onErrorToast } from "./components/utilites";
 
