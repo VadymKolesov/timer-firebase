@@ -13,8 +13,8 @@ import firebaseConfig from "./firebase-config";
 import { db } from "./database";
 import { manageBtns, manageBtnsDefault } from "../js/components/manage-btns";
 import { manageWatchInterval } from "../js/components/watch";
-import { showUsers } from "/src/js/components/manage-users";
-import { renderStepsList } from "/src/js/components/render-steps-list";
+import { showUsers } from "../js/components/manage-users";
+import { renderStepsList } from "../js/components/render-steps-list";
 
 export async function getFirebaseData() {
   const dbRef = ref(getDatabase());
