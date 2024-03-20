@@ -1,5 +1,5 @@
-import { refs } from "./src/js/components/refs";
-import { checkLogin, logOut, onBack } from "./src/js/components/utilites";
+import { refs } from "./js/components/refs";
+import { checkLogin, logOut, onBack } from "./js/components/utilites";
 
 checkLogin();
 
