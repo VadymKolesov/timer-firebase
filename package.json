@@ -1,5 +1,5 @@
 {
-  "name": "timer-vite",
+  "name": "stopwatch",
   "private": true,
   "version": "0.0.0",
   "type": "module",
@@ -11,8 +11,8 @@
   "devDependencies": {
     "vite": "^5.1.4",
     "glob": "^8.1.0"
-
   },
+  "license": "ISC",
   "dependencies": {
     "vite-plugin-full-reload": "^1.0.5",
     "vite-plugin-html-inject": "^1.0.1",
